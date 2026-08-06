@@ -28,7 +28,7 @@ export const profile = {
   verified: true,
   title: "Full-Stack & AI Engineer",
   secondary: "FOSSEE Summer Fellow @ IIT Bombay",
-  location: "Meerut, Uttar Pradesh, India",
+  location: "India",
   tagline: "Building AI-native products — measured, not assumed.",
   email: "farzankhan1800@gmail.com",
   /** Drop a file in /public and point at it, e.g. "/avatar.jpg". */
@@ -233,7 +233,7 @@ export const education = {
   degree: "B.Tech, Computer Science",
   dates: "2023 — 2027",
   icon: "cap" as EntryIconId,
-  detail: "CGPA 8.49",
+  detail: "CGPA 8.5",
   coursework: [
     "Deep Learning",
     "Computer Vision",
