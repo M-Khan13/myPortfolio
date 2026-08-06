@@ -1,26 +1,254 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-jetbrains-mono);
+  --font-heading: var(--font-space-grotesk);
+  --font-script: var(--font-caveat);
+
+  /* Editorial framing tokens */
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+  --color-hatch: var(--hatch);
+  --color-surface: var(--surface);
+  --color-level-0: var(--level-0);
+  --color-level-1: var(--level-1);
+  --color-level-2: var(--level-2);
+  --color-level-3: var(--level-3);
+  --color-level-4: var(--level-4);
+
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ── Light ─────────────────────────────────────────────────────────────── */
+:root {
+  /*
+   * Off-white, not white. The light theme lands on warm paper — nothing here
+   * is allowed to reach oklch(1 0 0), so the page never glares and the card
+   * surfaces still have somewhere lighter to go.
+   */
+  --background: oklch(0.947 0.004 95);
+  --foreground: oklch(0.19 0.008 285);
+  --surface: oklch(0.978 0.003 95);
+  --card: oklch(0.978 0.003 95);
+  --card-foreground: oklch(0.19 0.008 285);
+  --popover: oklch(0.978 0.003 95);
+  --popover-foreground: oklch(0.19 0.008 285);
+  --primary: oklch(0.22 0.01 285);
+  --primary-foreground: oklch(0.972 0.003 95);
+  --secondary: oklch(0.918 0.005 95);
+  --secondary-foreground: oklch(0.22 0.01 285);
+  --muted: oklch(0.918 0.005 95);
+  --muted-foreground: oklch(0.495 0.008 285);
+  --accent: oklch(0.9 0.006 95);
+  --accent-foreground: oklch(0.22 0.01 285);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.868 0.005 95);
+  --input: oklch(0.868 0.005 95);
+  --ring: oklch(0.55 0.02 285);
+  --radius: 0.375rem;
+
+  --rule: oklch(0.865 0.005 95);
+  --rule-strong: oklch(0.785 0.006 95);
+  --hatch: oklch(0.84 0.006 95);
+
+  /*
+   * Contribution graph ramp. Each theme ramps towards its own opposite: on
+   * paper that means neutral grey down to near-black ink, and in the dark
+   * theme it means the cream off-white below. Neither is green.
+   */
+  --level-0: oklch(0.898 0.004 95);
+  --level-1: oklch(0.755 0.004 285);
+  --level-2: oklch(0.58 0.005 285);
+  --level-3: oklch(0.395 0.006 285);
+  --level-4: oklch(0.225 0.008 285);
+
+  /* Hover lift — a barely-there brightening, never a colour pop. */
+  --lift-ring: oklch(0.55 0.01 285 / 14%);
+  --lift-glow: oklch(0.4 0.01 285 / 18%);
+
+  /* Isometric hero backdrop. */
+  --iso-stroke: oklch(0.5 0.008 285 / 13%);
+  --iso-hatch: oklch(0.5 0.008 285 / 6%);
+  --iso-glow: oklch(0.3 0.01 285 / 55%);
+
+  color-scheme: light;
+}
+
+/* ── Dark (default) ────────────────────────────────────────────────────── */
+.dark {
+  --background: oklch(0.145 0.004 285);
+  --foreground: oklch(0.93 0.003 285);
+  --surface: oklch(0.185 0.005 285);
+  --card: oklch(0.185 0.005 285);
+  --card-foreground: oklch(0.93 0.003 285);
+  --popover: oklch(0.185 0.005 285);
+  --popover-foreground: oklch(0.93 0.003 285);
+  --primary: oklch(0.93 0.003 285);
+  --primary-foreground: oklch(0.185 0.005 285);
+  --secondary: oklch(0.25 0.006 285);
+  --secondary-foreground: oklch(0.93 0.003 285);
+  --muted: oklch(0.25 0.006 285);
+  --muted-foreground: oklch(0.63 0.008 285);
+  --accent: oklch(0.27 0.007 285);
+  --accent-foreground: oklch(0.93 0.003 285);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 11%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.62 0.01 285);
+
+  --rule: oklch(1 0 0 / 9%);
+  --rule-strong: oklch(1 0 0 / 16%);
+  --hatch: oklch(1 0 0 / 7%);
+
+  /* Cream, ramping the other way — see the light-theme note above. */
+  --level-0: oklch(1 0 0 / 6%);
+  --level-1: oklch(0.4 0.008 90);
+  --level-2: oklch(0.565 0.014 88);
+  --level-3: oklch(0.745 0.02 88);
+  --level-4: oklch(0.925 0.028 88);
+
+  --lift-ring: oklch(1 0 0 / 12%);
+  --lift-glow: oklch(1 0 0 / 22%);
+
+  --iso-stroke: oklch(1 0 0 / 6.5%);
+  --iso-hatch: oklch(1 0 0 / 3%);
+  --iso-glow: oklch(1 0 0 / 48%);
+
+  color-scheme: dark;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  html {
+    @apply font-sans;
+  }
+
+  /* One consistent, always-visible focus treatment across the whole page. */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: var(--foreground);
+    color: var(--background);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /*
+   * Diagonal-hatch strip used for section dividers. Drawn with a repeating
+   * gradient so it costs nothing and recolors with the theme.
+   */
+  .hatch {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      var(--hatch) 0,
+      var(--hatch) 1px,
+      transparent 1px,
+      transparent 7px
+    );
+  }
+
+  /* Monospace label used for section headers, data rows and tech pills. */
+  .label {
+    @apply font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-muted-foreground;
+  }
+
+}
+
+/*
+ * The one hover treatment on the site: a firm but barely-there brightening.
+ * Applied only to icons, tags, badges and interactive rows — never to body copy
+ * or whole sections. It never introduces colour; `.lift-brand` is the single,
+ * heavily muted exception.
+ *
+ * These live in the utilities layer, not components: the elements they apply to
+ * also carry `text-muted-foreground`, and a later layer beats any specificity a
+ * components-layer rule could reach for. Inside the layer the `:hover`
+ * compounds win on specificity as usual.
+ */
+@layer utilities {
+  .lift {
+    transition-property: color, border-color, background-color, box-shadow,
+      opacity;
+    transition-duration: 200ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .lift:hover,
+  .group\/entry:hover .lift {
+    color: var(--foreground);
+    border-color: var(--rule-strong);
+  }
+
+  /* Bordered variant — pills, badges, buttons. Adds the faint outer glow. */
+  .lift-box:hover,
+  .group\/entry:hover .lift-box {
+    box-shadow:
+      inset 0 0 0 1px var(--lift-ring),
+      0 0 14px -6px var(--lift-glow);
+  }
+
+  /*
+   * Brand marks may warm towards their own colour on hover, mixed far enough
+   * back into the foreground that it reads as a tint, not a logo.
+   */
+  .lift-brand:hover {
+    color: color-mix(in oklab, var(--brand) 32%, var(--foreground));
+  }
+}
+
+/*
+ * Reduced motion: collapse every transition/animation to an instant change.
+ * The expand/collapse panels additionally check the media query in JS so they
+ * snap open rather than animating to a height of 0.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
