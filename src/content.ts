@@ -90,7 +90,7 @@ export const greetings = {
 
 export const intro = {
   bullets: [
-    "Final-year B.Tech Computer Science student at VIT Bhopal (CGPA 8.49), building full-stack and AI products.",
+    "Final-year B.Tech Computer Science student at VIT Bhopal (CGPA 8.5), building full-stack and AI products.",
     "FOSSEE Summer Fellow at IIT Bombay, contributing to eSim-Cloud — an open-source, browser-based circuit simulator.",
     "MERN + AI integration is home turf: hand-rolled RAG pipelines, LLM eval guards, Gemini API.",
     "I ship with eval harnesses — measured, not assumed.",
