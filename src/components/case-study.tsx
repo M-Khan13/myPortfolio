@@ -1,8 +1,10 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Fragment } from "react";
 
 import { Badge, BadgeRail, Divider, Section } from "@/components/frame";
 import { isPlaceholder, type CaseStudy } from "@/content";
+import type { CaseStudyProject } from "@/lib/projects";
 import { cn } from "@/lib/utils";
 
 /**
@@ -59,6 +61,56 @@ export function CaseStudyBody({ study }: { study: CaseStudy }) {
         <Prose>{study.reflection}</Prose>
       </Section>
     </>
+  );
+}
+
+/**
+ * Prev / next links to the neighbouring case studies. Renders nothing when a
+ * project has no neighbours, so the page just ends on the reflection.
+ */
+export function CaseStudyNav({
+  prev,
+  next,
+}: {
+  prev?: CaseStudyProject;
+  next?: CaseStudyProject;
+}) {
+  if (!prev && !next) return null;
+
+  return (
+    <>
+      <Divider />
+      <Section label="More case studies">
+        <nav className="flex flex-wrap items-start justify-between gap-6">
+          {prev ? <NavLink project={prev} direction="prev" /> : <span />}
+          {next ? <NavLink project={next} direction="next" /> : null}
+        </nav>
+      </Section>
+    </>
+  );
+}
+
+function NavLink({
+  project,
+  direction,
+}: {
+  project: CaseStudyProject;
+  direction: "prev" | "next";
+}) {
+  const next = direction === "next";
+
+  return (
+    <Link
+      href={`/projects/${project.slug}`}
+      className={cn("group max-w-[48%]", next && "text-right")}
+    >
+      <span className="label transition-colors group-hover:text-foreground">
+        {next ? "Next →" : "← Prev"}
+      </span>
+      <span className="mt-1.5 block font-heading text-sm font-semibold tracking-tight text-muted-foreground transition-colors group-hover:text-foreground">
+        {project.title}
+      </span>
+    </Link>
   );
 }
 

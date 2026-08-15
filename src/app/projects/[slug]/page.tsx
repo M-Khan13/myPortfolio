@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
-import { CaseStudyBody } from "@/components/case-study";
+import { CaseStudyBody, CaseStudyNav } from "@/components/case-study";
 import {
   Column,
   Divider,
@@ -13,6 +13,7 @@ import {
 import { Footer } from "@/components/sections/footer";
 import { Nav } from "@/components/sections/nav";
 import {
+  adjacentCaseStudies,
   caseStudyProjects,
   findCaseStudyProject,
   findProject,
@@ -86,6 +87,7 @@ export default async function CaseStudyPage({
           </Section>
 
           <CaseStudyBody study={caseStudy} />
+          <CaseStudyNav {...adjacentCaseStudies(slug)} />
 
           <Divider />
           <Footer />
