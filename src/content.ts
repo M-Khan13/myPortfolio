@@ -154,7 +154,39 @@ export const experience: Experience[] = [
 
 export type ProjectLink = { label: string; href: string };
 
+/**
+ * The long-form write-up behind a project, rendered at `/projects/[slug]`.
+ *
+ * Optional by design: a project without one keeps its card on the homepage and
+ * never gets a detail page, so case studies can be written one at a time.
+ */
+export type CaseStudy = {
+  /** How the work was staffed, e.g. "Solo — full-stack". */
+  role: string;
+  /** Lead image, a path under /public. A `{{PLACEHOLDER}}` draws a frame. */
+  cover?: string;
+  problem: string;
+  /** Rendered as an ordered 01/02/03 list, so order is meaningful. */
+  constraints: string[];
+  build: {
+    intro: string;
+    /** Data for the monochrome node diagram — one box per node, in flow order. */
+    architecture: {
+      nodes: { label: string; sub?: string }[];
+      deploy?: string;
+    };
+    decisions: { title: string; body: string }[];
+  };
+  /** Stat blocks: a big mono value over a small label. */
+  outcome: { value: string; label: string }[];
+  /** A `{{PLACEHOLDER}}` src renders a framed placeholder with its caption. */
+  gallery?: { src: string; caption: string }[];
+  reflection: string;
+};
+
 export type Project = {
+  /** URL segment for the case-study page: `/projects/[slug]`. */
+  slug: string;
   title: string;
   year: string;
   description: string;
@@ -164,10 +196,12 @@ export type Project = {
   tech: string[];
   links: ProjectLink[];
   defaultOpen?: boolean;
+  caseStudy?: CaseStudy;
 };
 
 export const projects: Project[] = [
   {
+    slug: "cafe-ops",
     title: "Café Ops",
     year: "2025",
     description: "Full-stack café operations platform.",
@@ -184,8 +218,65 @@ export const projects: Project[] = [
       { label: "Repo", href: "https://github.com/M-Khan13/Cafe-opps" },
       { label: "Live", href: "{{CAFE_OPS_LIVE_URL}}" },
     ],
+    caseStudy: {
+      role: "Solo — full-stack",
+      cover: "{{CAFE_OPS_COVER}}",
+      problem:
+        "Small cafés run on shouted orders and sticky notes. Front-of-house loses track of what's fired, the kitchen loses track of what's next, and shift leads spend the rush improvising task lists instead of running the floor. I wanted a single surface that kept orders and staff work in sync in real time — without adding another thing for busy staff to babysit.",
+      constraints: [
+        "AI-generated tasks could never be wrong on the floor. A hallucinated or nonsensical task during a rush is worse than no task at all, so anything the model produced had to pass hard validation before a human ever saw it.",
+        "Two very different audiences shared one backend — admins managing orders and staff clearing tasks — so role-based access had to be enforced at the API, not just hidden in the UI.",
+        "Order state had to feel instant across every open screen. A tablet at the counter and a phone in the back should reflect the same truth within a blink — polling wasn't going to cut it.",
+      ],
+      build: {
+        intro:
+          "A two-sided operations platform: a React client for both admin and staff, a Node/Express API guarding role-based access with JWT, MongoDB for state, a Socket.IO channel pushing the live order feed, and a Gemini task generator sitting behind a 5-check validation guard.",
+        architecture: {
+          nodes: [
+            { label: "CLIENT", sub: "React — admin · staff" },
+            { label: "API GATEWAY", sub: "Node · Express · JWT roles" },
+            { label: "MongoDB", sub: "state store" },
+            { label: "Socket.IO", sub: "live order feed" },
+            { label: "Gemini", sub: "→ 5-check guard" },
+          ],
+          deploy: "Docker → GitHub Actions CI → Railway",
+        },
+        decisions: [
+          {
+            title: "The 5-check guard",
+            body: "Every AI task runs a gauntlet — schema shape, field bounds, role fit, duplicate detection, and profanity/nonsense screening — and anything that fails is dropped silently rather than shown.",
+          },
+          {
+            title: "Auth at the edge",
+            body: "JWT with role claims is verified in Express middleware, so the staff UI physically can't reach admin routes even if the client is tampered with.",
+          },
+          {
+            title: "Events over polling",
+            body: "Order changes broadcast over Socket.IO rooms scoped per café, so every screen updates from one write instead of hammering the API.",
+          },
+          {
+            title: "Ship it reproducibly",
+            body: "One Dockerfile, a GitHub Actions pipeline that builds and tests on every push, and a one-command deploy to Railway.",
+          },
+        ],
+      },
+      outcome: [
+        { value: "5", label: "check eval guard on every AI task" },
+        { value: "0", label: "bad AI tasks shipped to staff" },
+        { value: "<100ms", label: "real-time order feed latency" },
+      ],
+      gallery: [
+        { src: "{{CAFE_OPS_SHOT_KANBAN}}", caption: "Order kanban" },
+        { src: "{{CAFE_OPS_SHOT_TASKS}}", caption: "Staff task screen" },
+        { src: "{{CAFE_OPS_SHOT_AI_REVIEW}}", caption: "AI task review" },
+        { src: "{{CAFE_OPS_SHOT_FEED}}", caption: "Live order feed" },
+      ],
+      reflection:
+        'The guard was the hard part, not the model. Most of the work was deciding what "good enough to show a human" actually meant — and being willing to throw away tasks that weren\'t.',
+    },
   },
   {
+    slug: "ai-github-repo-explainer",
     title: "AI GitHub Repo Explainer",
     year: "2026",
     description: "Ask a codebase how it works.",
@@ -200,6 +291,7 @@ export const projects: Project[] = [
     links: [],
   },
   {
+    slug: "rag-doc-qa",
     title: "RAG Doc Q&A",
     year: "2026",
     description: "Chat with your PDFs.",
@@ -213,6 +305,7 @@ export const projects: Project[] = [
     links: [],
   },
   {
+    slug: "sen",
     title: "sen",
     year: "2026",
     description: "A CLI command-runner published to npm.",
