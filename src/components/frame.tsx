@@ -132,23 +132,55 @@ export function LinkChip({
 export function ProjectLinks({
   links,
   className,
+  /**
+   * `chip` is the bordered button used on the homepage cards; `plain` is the
+   * lighter text-and-arrow pair the case-study header wants.
+   */
+  variant = "chip",
 }: {
   links: { label: string; href: string }[];
   className?: string;
+  variant?: "chip" | "plain";
 }) {
   if (links.length === 0) return null;
 
   return (
-    <ul className={cn("flex flex-wrap items-center gap-3", className)}>
+    <ul
+      className={cn(
+        "flex flex-wrap items-center",
+        variant === "plain" ? "gap-x-6 gap-y-2" : "gap-3",
+        className,
+      )}
+    >
       {links.map((link) =>
         isPlaceholder(link.href) ? (
           <li key={link.label} className="flex items-center gap-2">
-            <span className="label">{link.label}</span>
+            <span
+              className={cn(
+                variant === "plain"
+                  ? "font-mono text-xs text-muted-foreground"
+                  : "label",
+              )}
+            >
+              {link.label}
+            </span>
             <PlaceholderChip value={link.href} />
           </li>
         ) : (
           <li key={link.label}>
-            <LinkChip href={link.href}>{link.label}</LinkChip>
+            {variant === "plain" ? (
+              <a
+                href={link.href}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="group inline-flex items-center gap-1.5 font-mono text-xs text-muted-foreground transition-colors hover:text-foreground"
+              >
+                {link.label}
+                <ArrowUpRightIcon className="size-3" />
+              </a>
+            ) : (
+              <LinkChip href={link.href}>{link.label}</LinkChip>
+            )}
           </li>
         ),
       )}

@@ -163,16 +163,23 @@ export type ProjectLink = { label: string; href: string };
 export type CaseStudy = {
   /** How the work was staffed, e.g. "Solo — full-stack". */
   role: string;
-  /** Lead image, a path under /public. A `{{PLACEHOLDER}}` draws a frame. */
-  cover?: string;
+  /**
+   * Lead image. `src` is a path under /public; a `{{PLACEHOLDER}}` draws the
+   * empty frame instead, with `caption` set inside it.
+   */
+  cover?: { src: string; caption: string };
   problem: string;
   /** Rendered as an ordered 01/02/03 list, so order is meaningful. */
   constraints: string[];
   build: {
     intro: string;
-    /** Data for the monochrome node diagram — one box per node, in flow order. */
     architecture: {
-      nodes: { label: string; sub?: string }[];
+      /**
+       * The node diagram, one array per row of the flow. Rows stack top to
+       * bottom with an arrow between them, and a row holding several nodes
+       * renders them side by side — that's how a single spine branches out.
+       */
+      rows: { label: string; sub?: string }[][];
       deploy?: string;
     };
     decisions: { title: string; body: string }[];
@@ -215,12 +222,15 @@ export const projects: Project[] = [
     ],
     tech: ["React", "Node.js", "Express", "MongoDB", "Gemini", "Socket.IO", "Docker"],
     links: [
-      { label: "Repo", href: "https://github.com/M-Khan13/Cafe-opps" },
-      { label: "Live", href: "{{CAFE_OPS_LIVE_URL}}" },
+      { label: "Repository", href: "https://github.com/M-Khan13/Cafe-opps" },
+      { label: "Live site", href: "{{CAFE_OPS_LIVE_URL}}" },
     ],
     caseStudy: {
       role: "Solo — full-stack",
-      cover: "{{CAFE_OPS_COVER}}",
+      cover: {
+        src: "{{CAFE_OPS_COVER}}",
+        caption: "Cover — admin order kanban",
+      },
       problem:
         "Small cafés run on shouted orders and sticky notes. Front-of-house loses track of what's fired, the kitchen loses track of what's next, and shift leads spend the rush improvising task lists instead of running the floor. I wanted a single surface that kept orders and staff work in sync in real time — without adding another thing for busy staff to babysit.",
       constraints: [
@@ -232,12 +242,16 @@ export const projects: Project[] = [
         intro:
           "A two-sided operations platform: a React client for both admin and staff, a Node/Express API guarding role-based access with JWT, MongoDB for state, a Socket.IO channel pushing the live order feed, and a Gemini task generator sitting behind a 5-check validation guard.",
         architecture: {
-          nodes: [
-            { label: "CLIENT", sub: "React — admin · staff" },
-            { label: "API GATEWAY", sub: "Node · Express · JWT roles" },
-            { label: "MongoDB", sub: "state store" },
-            { label: "Socket.IO", sub: "live order feed" },
-            { label: "Gemini", sub: "→ 5-check guard" },
+          // Client and gateway form the spine; everything the gateway talks to
+          // sits on the branch row beneath it.
+          rows: [
+            [{ label: "CLIENT", sub: "React — admin · staff" }],
+            [{ label: "API GATEWAY", sub: "Node · Express · JWT roles" }],
+            [
+              { label: "MongoDB", sub: "state store" },
+              { label: "Socket.IO", sub: "live order feed" },
+              { label: "Gemini", sub: "→ 5-check guard" },
+            ],
           ],
           deploy: "Docker → GitHub Actions CI → Railway",
         },

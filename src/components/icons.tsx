@@ -127,6 +127,35 @@ function Stroked({ className, d }: IconProps & { d: string }) {
   );
 }
 
+/*
+ * Case-study section glyphs. Fixed per section rather than chosen in
+ * content.ts — every write-up has the same three narrative beats — so they sit
+ * outside `entryIcons`. Same stroked grid as everything above.
+ */
+export const caseStudyIcons = {
+  // The problem: a flagged warning.
+  problem: (p: IconProps) => (
+    <Stroked
+      {...p}
+      d="M12 4.5 20.8 19.5H3.2L12 4.5ZM12 10.2v3.6M12 16.4v.6"
+    />
+  ),
+  // Constraints: hard bounds either side of the work.
+  constraints: (p: IconProps) => (
+    <Stroked
+      {...p}
+      d="M9 4.5H6.5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2H9M15 4.5h2.5a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H15M12 8.5v7"
+    />
+  ),
+  // What I built: assembled parts.
+  build: (p: IconProps) => (
+    <Stroked
+      {...p}
+      d="M4.5 4.5h6v6h-6zM13.5 4.5h6v6h-6zM4.5 13.5h6v6h-6zM13.5 13.5h6v6h-6z"
+    />
+  ),
+} satisfies Record<string, (p: IconProps) => React.ReactElement>;
+
 export const entryIcons: Record<
   EntryIconId,
   (p: IconProps) => React.ReactElement

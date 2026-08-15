@@ -7,7 +7,15 @@
       "Bash(pkill -f \"next start -p 4123\")",
       "Bash(git commit -q -m ' *)",
       "Bash(curl -s http://localhost:4123/projects/cafe-ops)",
-      "Bash(python3 -c ' *)"
+      "Bash(python3 -c ' *)",
+      "Bash(ls /Applications/ | grep -iE \"chrome|chromium|edge|brave\" ; ls ~/Applications 2>/dev/null | grep -iE \"chrome|chromium\")",
+      "Read(//Applications/**)",
+      "Read(//Users/farzankhan/Applications/**)",
+      "Bash(\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --headless --disable-gpu --hide-scrollbars --force-device-scale-factor=1 --window-size=1200,4200 --screenshot=cs.png --virtual-time-budget=4000 http://localhost:4123/projects/cafe-ops)",
+      "Bash(\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --headless --disable-gpu --hide-scrollbars --window-size=390,3400 --screenshot=mobile.png --virtual-time-budget=4000 http://localhost:4123/projects/cafe-ops)",
+      "Bash(\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --headless=new --disable-gpu --hide-scrollbars --window-size=390,1400 --screenshot=mobile2.png --virtual-time-budget=4000 http://localhost:4123/projects/cafe-ops)",
+      "Bash(\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --headless=new --disable-gpu --hide-scrollbars --window-size=390,900 --screenshot=home_m.png --virtual-time-budget=4000 http://localhost:4123/)",
+      "Bash(\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --headless=new --disable-gpu --hide-scrollbars --window-size=500,4600 --screenshot=narrow.png --virtual-time-budget=4000 http://localhost:4123/projects/cafe-ops)"
     ]
   }
 }

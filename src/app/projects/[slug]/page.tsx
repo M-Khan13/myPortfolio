@@ -78,26 +78,26 @@ export default async function CaseStudyPage({
             <div className="mt-10">
               <SectionLabel as="p">Case study</SectionLabel>
 
-              <h1 className="font-heading text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
+              <h1 className="font-heading text-4xl font-bold tracking-tight text-balance sm:text-5xl">
                 {project.title}
               </h1>
 
-              <p className="mt-3 text-pretty text-sm text-muted-foreground">
-                {project.description}
-              </p>
-
-              <dl className="mt-6 flex flex-wrap gap-x-8 gap-y-3">
+              <dl className="mt-7 flex flex-wrap gap-x-10 gap-y-3">
                 <div>
                   <dt className="label">Year</dt>
-                  <dd className="mt-1 font-mono text-sm">{project.year}</dd>
+                  <dd className="mt-1.5 font-mono text-sm">{project.year}</dd>
                 </div>
                 <div>
                   <dt className="label">Role</dt>
-                  <dd className="mt-1 font-mono text-sm">{caseStudy.role}</dd>
+                  <dd className="mt-1.5 font-mono text-sm">{caseStudy.role}</dd>
                 </div>
               </dl>
 
-              <ProjectLinks links={project.links} className="mt-6" />
+              <ProjectLinks
+                links={project.links}
+                variant="plain"
+                className="mt-7"
+              />
 
               <ul className="mt-6 flex flex-wrap gap-1.5">
                 {project.tech.map((tech) => (

@@ -1,8 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Fragment } from "react";
+import { Fragment, type ReactNode } from "react";
 
-import { Badge, BadgeRail, Divider, Section } from "@/components/frame";
+import { Badge, Divider, Section } from "@/components/frame";
+import { caseStudyIcons } from "@/components/icons";
 import { isPlaceholder, type CaseStudy } from "@/content";
 import type { CaseStudyProject } from "@/lib/projects";
 import { cn } from "@/lib/utils";
@@ -11,6 +12,10 @@ import { cn } from "@/lib/utils";
  * The body of a case-study page: every block below the header, in reading
  * order. Blocks whose content is missing drop out entirely, so a thinner case
  * study still reads as finished rather than broken.
+ *
+ * The three narrative beats — problem, constraints, what I built — share one
+ * badge rail, which is why they live inside a single section rather than each
+ * getting their own.
  */
 export function CaseStudyBody({
   study,
@@ -22,58 +27,305 @@ export function CaseStudyBody({
   return (
     <>
       {study.cover ? (
-        <>
-          <Divider />
-          {/* No eyebrow — the cover leads straight into the write-up. */}
-          <Section>
-            <Frame
-              // Letterboxed on a wide screen, squarer on a phone so the cover
-              // doesn't collapse to a sliver.
-              className="aspect-video sm:aspect-[21/9]"
-              src={study.cover}
-              alt={`${title} — cover`}
-              sizes="(min-width: 768px) 768px, 100vw"
-            />
-          </Section>
-        </>
+        // No eyebrow, and no top padding — the cover belongs to the header
+        // block above it and leads straight into the write-up.
+        <Section className="pt-0">
+          <Frame
+            className="aspect-video"
+            src={study.cover.src}
+            alt={`${title} — ${study.cover.caption}`}
+            caption={study.cover.caption}
+            chrome
+            sizes="(min-width: 768px) 768px, 100vw"
+          />
+        </Section>
       ) : null}
 
       <Divider />
-      <Section label="The problem">
-        <Prose>{study.problem}</Prose>
+
+      <Section>
+        <Rail>
+          <RailBlock icon="problem" label="The problem">
+            <Prose>{study.problem}</Prose>
+          </RailBlock>
+
+          <RailBlock icon="constraints" label="Constraints">
+            <Constraints items={study.constraints} />
+          </RailBlock>
+
+          <RailBlock icon="build" label="What I built">
+            <Prose>{study.build.intro}</Prose>
+            <Architecture {...study.build.architecture} />
+            <Decisions items={study.build.decisions} />
+          </RailBlock>
+        </Rail>
       </Section>
 
       <Divider />
-      <Section label="Constraints">
-        <Constraints items={study.constraints} />
-      </Section>
 
-      <Divider />
-      <Section label="What I built">
-        <Prose>{study.build.intro}</Prose>
-        <Architecture {...study.build.architecture} />
-        <Decisions items={study.build.decisions} />
-      </Section>
-
-      <Divider />
       <Section label="Outcome">
         <Outcome stats={study.outcome} />
       </Section>
 
       {study.gallery && study.gallery.length > 0 ? (
-        <>
-          <Divider />
-          <Section label="Gallery">
-            <Gallery shots={study.gallery} />
-          </Section>
-        </>
+        <Section label="Gallery" className="pt-0">
+          <Gallery shots={study.gallery} />
+        </Section>
       ) : null}
 
       <Divider />
+
       <Section label="Reflection">
-        <Prose>{study.reflection}</Prose>
+        <p className="max-w-xl text-pretty font-heading text-xl leading-snug tracking-tight sm:text-2xl">
+          {study.reflection}
+        </p>
       </Section>
     </>
+  );
+}
+
+/**
+ * The shared left rail: one hairline running the height of the group with the
+ * section badges sitting on it. The line is drawn once behind the badges —
+ * their surface fill masks it — so it reads as continuous rather than as three
+ * separate connectors.
+ */
+function Rail({ children }: { children: ReactNode }) {
+  return (
+    <div className="relative grid grid-cols-[2rem_1fr] gap-x-4 sm:gap-x-6">
+      <span
+        aria-hidden="true"
+        className="absolute left-4 top-4 bottom-0 w-px -translate-x-1/2 bg-linear-to-b from-rule-strong via-rule-strong to-transparent"
+      />
+      {children}
+    </div>
+  );
+}
+
+/**
+ * One beat of the rail. Returns two grid cells — badge, then content — so
+ * every block shares the parent's single column layout.
+ */
+function RailBlock({
+  icon,
+  label,
+  children,
+}: {
+  icon: keyof typeof caseStudyIcons;
+  label: string;
+  children: ReactNode;
+}) {
+  const Icon = caseStudyIcons[icon];
+
+  return (
+    <>
+      <Badge>
+        <Icon className="size-4" />
+      </Badge>
+      {/* The badge is 2rem tall, so the eyebrow centres against it. */}
+      <div className="min-w-0 pb-14 last:pb-0">
+        <h2 className="label flex h-8 items-center">{label}</h2>
+        <div className="mt-3">{children}</div>
+      </div>
+    </>
+  );
+}
+
+/** Body copy, held to a comfortable measure. */
+function Prose({ children }: { children: string }) {
+  return (
+    <p className="max-w-prose text-pretty text-sm leading-relaxed text-muted-foreground">
+      {children}
+    </p>
+  );
+}
+
+/**
+ * An image slot. Until a real file is dropped in /public the `{{PLACEHOLDER}}`
+ * src draws the empty frame instead — a hatched box captioned in brackets,
+ * never a broken image.
+ */
+function Frame({
+  src,
+  alt,
+  caption,
+  className,
+  sizes,
+  chrome = false,
+}: {
+  src: string;
+  alt: string;
+  caption: string;
+  className?: string;
+  sizes?: string;
+  /** Draws the window dots along the top edge, as the cover does. */
+  chrome?: boolean;
+}) {
+  if (!isPlaceholder(src)) {
+    return (
+      <div
+        className={cn(
+          "relative w-full overflow-hidden rounded border border-rule bg-surface",
+          className,
+        )}
+      >
+        <Image src={src} alt={alt} fill sizes={sizes} className="object-cover" />
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className={cn(
+        "relative grid w-full place-items-center rounded border border-rule bg-surface",
+        className,
+      )}
+    >
+      {chrome ? (
+        <span aria-hidden="true" className="absolute left-4 top-4 flex gap-1.5">
+          <span className="size-2 rounded-full border border-rule-strong" />
+          <span className="size-2 rounded-full border border-rule-strong" />
+          <span className="size-2 rounded-full border border-rule-strong" />
+        </span>
+      ) : null}
+      <span className="label px-4 text-center">[ {caption} ]</span>
+    </div>
+  );
+}
+
+/** Numbered constraints, with the number hanging in its own narrow column. */
+function Constraints({ items }: { items: string[] }) {
+  return (
+    <ol className="space-y-5">
+      {items.map((item, i) => (
+        <li key={item} className="grid grid-cols-[1.75rem_1fr] gap-x-2">
+          <span className="label pt-0.5">{String(i + 1).padStart(2, "0")}</span>
+          <p className="max-w-prose text-pretty text-sm leading-relaxed text-muted-foreground">
+            {item}
+          </p>
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+/**
+ * The system diagram: a framed flow of monochrome boxes. Each row of nodes sits
+ * side by side, and rows are joined top to bottom — so a spine that branches
+ * into several services is just a row with more than one node in it.
+ */
+function Architecture({ rows, deploy }: CaseStudy["build"]["architecture"]) {
+  return (
+    <div className="mt-8 rounded border border-rule px-4 py-6 sm:px-8">
+      {rows.map((row, i) => (
+        // Rows have no stable key of their own; their position is their key.
+        <Fragment key={i}>
+          {i > 0 ? (
+            <p
+              aria-hidden="true"
+              className="py-2 text-center font-mono text-xs text-muted-foreground"
+            >
+              ↓
+            </p>
+          ) : null}
+          <div className="flex flex-col justify-center gap-3 sm:flex-row">
+            {row.map((node) => (
+              <div
+                key={node.label}
+                className="lift lift-box flex-1 rounded border border-rule bg-surface px-3 py-2.5 text-center sm:max-w-56"
+              >
+                <p className="font-mono text-[0.6875rem] uppercase tracking-[0.14em]">
+                  {node.label}
+                </p>
+                {node.sub ? (
+                  <p className="mt-1 font-mono text-[0.625rem] leading-relaxed text-muted-foreground">
+                    {node.sub}
+                  </p>
+                ) : null}
+              </div>
+            ))}
+          </div>
+        </Fragment>
+      ))}
+
+      {deploy ? (
+        <p className="mt-6 font-mono text-[0.625rem] text-muted-foreground">
+          <span className="mr-2 uppercase tracking-[0.14em]">Deploy</span>
+          {deploy}
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
+/** Key decisions — the title runs into its own paragraph after the arrow. */
+function Decisions({ items }: { items: { title: string; body: string }[] }) {
+  return (
+    <div className="mt-10">
+      <h3 className="label mb-5">Key decisions</h3>
+      <ul className="space-y-4">
+        {items.map((item) => (
+          <li key={item.title} className="flex gap-3">
+            <span
+              aria-hidden="true"
+              className="mt-0.5 font-mono text-xs text-rule-strong"
+            >
+              →
+            </span>
+            <p className="max-w-prose text-pretty text-sm leading-relaxed text-muted-foreground">
+              <strong className="font-semibold text-foreground">
+                {item.title}.
+              </strong>{" "}
+              {item.body}
+            </p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+/** Result stats: a big mono value over a small label, split by hairlines. */
+function Outcome({ stats }: { stats: { value: string; label: string }[] }) {
+  return (
+    <dl className="grid border-t border-rule sm:grid-cols-3">
+      {stats.map((stat, i) => (
+        // Reversed so the value reads first while the label stays the term.
+        <div
+          key={stat.label}
+          className={cn(
+            "flex flex-col-reverse py-6",
+            i > 0 && "border-t border-rule sm:border-l sm:border-t-0 sm:pl-6",
+            i > 0 || "sm:pr-6",
+          )}
+        >
+          <dt className="mt-2 max-w-40 text-pretty text-xs leading-relaxed text-muted-foreground">
+            {stat.label}
+          </dt>
+          <dd className="font-mono text-3xl tracking-tight text-foreground">
+            {stat.value}
+          </dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
+function Gallery({ shots }: { shots: { src: string; caption: string }[] }) {
+  return (
+    <ul className="grid gap-4 sm:grid-cols-2">
+      {shots.map((shot) => (
+        <li key={shot.caption}>
+          <Frame
+            className="aspect-[4/3]"
+            src={shot.src}
+            alt={shot.caption}
+            caption={shot.caption}
+            sizes="(min-width: 640px) 384px, 100vw"
+          />
+        </li>
+      ))}
+    </ul>
   );
 }
 
@@ -91,15 +343,15 @@ export function CaseStudyNav({
   if (!prev && !next) return null;
 
   return (
-    <>
-      <Divider />
-      <Section label="More case studies">
-        <nav className="flex flex-wrap items-start justify-between gap-6">
-          {prev ? <NavLink project={prev} direction="prev" /> : <span />}
-          {next ? <NavLink project={next} direction="next" /> : null}
-        </nav>
-      </Section>
-    </>
+    <Section className="pt-0">
+      <nav
+        aria-label="More case studies"
+        className="flex flex-wrap items-start justify-between gap-6 border-t border-rule pt-6"
+      >
+        {prev ? <NavLink project={prev} direction="prev" /> : <span />}
+        {next ? <NavLink project={next} direction="next" /> : null}
+      </nav>
+    </Section>
   );
 }
 
@@ -120,193 +372,9 @@ function NavLink({
       <span className="label transition-colors group-hover:text-foreground">
         {next ? "Next →" : "← Prev"}
       </span>
-      <span className="mt-1.5 block font-heading text-sm font-semibold tracking-tight text-muted-foreground transition-colors group-hover:text-foreground">
+      <span className="mt-1.5 block text-sm text-muted-foreground transition-colors group-hover:text-foreground">
         {project.title}
       </span>
     </Link>
-  );
-}
-
-/** Body copy, held to a comfortable measure. */
-function Prose({ children }: { children: string }) {
-  return (
-    <p className="max-w-prose text-pretty text-sm leading-relaxed text-muted-foreground">
-      {children}
-    </p>
-  );
-}
-
-/**
- * An image slot. Until a real file is dropped in /public the `{{PLACEHOLDER}}`
- * src draws the empty frame instead — a hatched box on the grid, never a broken
- * image.
- */
-function Frame({
-  src,
-  alt,
-  className,
-  sizes,
-}: {
-  src: string;
-  alt: string;
-  className?: string;
-  sizes?: string;
-}) {
-  return (
-    <div
-      className={cn(
-        "relative w-full overflow-hidden rounded border border-rule bg-surface",
-        className,
-      )}
-    >
-      {isPlaceholder(src) ? (
-        <div role="presentation" className="hatch size-full" />
-      ) : (
-        <Image src={src} alt={alt} fill sizes={sizes} className="object-cover" />
-      )}
-    </div>
-  );
-}
-
-/**
- * Numbered constraints, each on the badge-and-connector rail the homepage
- * entries use, so the two pages share one left margin.
- */
-function Constraints({ items }: { items: string[] }) {
-  return (
-    <ol className="space-y-6">
-      {items.map((item, i) => (
-        <li
-          key={item}
-          className="group/entry grid grid-cols-[2rem_1fr] gap-x-3 sm:gap-x-4"
-        >
-          <BadgeRail>
-            <Badge className="font-mono text-[0.6875rem]">
-              {String(i + 1).padStart(2, "0")}
-            </Badge>
-          </BadgeRail>
-          <p className="max-w-prose text-pretty pt-1.5 text-sm leading-relaxed text-muted-foreground">
-            {item}
-          </p>
-        </li>
-      ))}
-    </ol>
-  );
-}
-
-/**
- * The system diagram: one monochrome box per node, joined by hairline
- * connectors that run left-to-right on a wide screen and top-to-bottom once
- * the boxes stack.
- */
-function Architecture({
-  nodes,
-  deploy,
-}: CaseStudy["build"]["architecture"]) {
-  return (
-    <div className="mt-8">
-      {/* A diagram, not a list: the boxes are plain flow content so the
-          connectors between them stay out of the accessibility tree. */}
-      <div className="flex flex-col items-stretch sm:flex-row">
-        {nodes.map((node, i) => (
-          <Fragment key={node.label}>
-            {i > 0 ? (
-              <span
-                aria-hidden="true"
-                className="mx-auto h-4 w-px shrink-0 self-center bg-rule-strong sm:mx-0 sm:h-px sm:w-4"
-              />
-            ) : null}
-            <div className="lift lift-box flex-1 rounded border border-rule bg-surface px-3 py-3 text-center">
-              <p className="font-mono text-[0.6875rem] uppercase tracking-[0.14em]">
-                {node.label}
-              </p>
-              {node.sub ? (
-                <p className="mt-1 font-mono text-[0.625rem] leading-relaxed text-muted-foreground">
-                  {node.sub}
-                </p>
-              ) : null}
-            </div>
-          </Fragment>
-        ))}
-      </div>
-
-      {deploy ? (
-        <p className="mt-4 border-t border-rule pt-3 font-mono text-[0.625rem] uppercase tracking-[0.14em] text-muted-foreground">
-          <span className="mr-2 text-foreground">Deploy</span>
-          {deploy}
-        </p>
-      ) : null}
-    </div>
-  );
-}
-
-/** Key decisions, as arrow points. */
-function Decisions({ items }: { items: { title: string; body: string }[] }) {
-  return (
-    <div className="mt-10">
-      <h3 className="label mb-5">Key decisions</h3>
-      <ul className="space-y-5">
-        {items.map((item) => (
-          <li key={item.title} className="flex gap-3">
-            <span
-              aria-hidden="true"
-              className="mt-0.5 font-mono text-xs text-rule-strong"
-            >
-              →
-            </span>
-            <div className="max-w-prose">
-              <p className="font-heading text-sm font-semibold tracking-tight">
-                {item.title}
-              </p>
-              <p className="mt-1 text-pretty text-sm leading-relaxed text-muted-foreground">
-                {item.body}
-              </p>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-/** Result stats: a big mono value over a small label. */
-function Outcome({ stats }: { stats: { value: string; label: string }[] }) {
-  return (
-    <dl className="grid gap-px overflow-hidden rounded border border-rule bg-rule sm:grid-cols-3">
-      {stats.map((stat) => (
-        // Reversed so the value reads first while the label stays the term.
-        <div
-          key={stat.label}
-          className="flex flex-col-reverse bg-surface px-4 py-5"
-        >
-          <dt className="mt-1.5 text-pretty text-xs leading-relaxed text-muted-foreground">
-            {stat.label}
-          </dt>
-          <dd className="font-mono text-2xl tracking-tight text-foreground">
-            {stat.value}
-          </dd>
-        </div>
-      ))}
-    </dl>
-  );
-}
-
-function Gallery({ shots }: { shots: { src: string; caption: string }[] }) {
-  return (
-    <ul className="grid gap-5 sm:grid-cols-2">
-      {shots.map((shot) => (
-        <li key={shot.caption}>
-          <figure>
-            <Frame
-              className="aspect-video"
-              src={shot.src}
-              alt={shot.caption}
-              sizes="(min-width: 640px) 384px, 100vw"
-            />
-            <figcaption className="label mt-2.5">{shot.caption}</figcaption>
-          </figure>
-        </li>
-      ))}
-    </ul>
   );
 }
