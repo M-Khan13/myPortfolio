@@ -15,7 +15,15 @@
       "Bash(\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --headless --disable-gpu --hide-scrollbars --window-size=390,3400 --screenshot=mobile.png --virtual-time-budget=4000 http://localhost:4123/projects/cafe-ops)",
       "Bash(\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --headless=new --disable-gpu --hide-scrollbars --window-size=390,1400 --screenshot=mobile2.png --virtual-time-budget=4000 http://localhost:4123/projects/cafe-ops)",
       "Bash(\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --headless=new --disable-gpu --hide-scrollbars --window-size=390,900 --screenshot=home_m.png --virtual-time-budget=4000 http://localhost:4123/)",
-      "Bash(\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --headless=new --disable-gpu --hide-scrollbars --window-size=500,4600 --screenshot=narrow.png --virtual-time-budget=4000 http://localhost:4123/projects/cafe-ops)"
+      "Bash(\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --headless=new --disable-gpu --hide-scrollbars --window-size=500,4600 --screenshot=narrow.png --virtual-time-budget=4000 http://localhost:4123/projects/cafe-ops)",
+      "Bash(\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --headless=new --disable-gpu --hide-scrollbars --window-size=1000,5200 --screenshot=home_full.png --virtual-time-budget=5000 http://localhost:4123/)",
+      "Bash(\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --headless=new --disable-gpu --hide-scrollbars --window-size=1000,1000 --screenshot=home_projects.png --virtual-time-budget=5000 \"http://localhost:4123/#projects\")",
+      "Bash(sips -g pixelHeight -g pixelWidth home_full.png)",
+      "Bash(cp home_full.png c1.png)",
+      "Bash(sips -c 1500 1000 --cropOffset 2500 0 c1.png --out crop_exp.png)",
+      "Bash(sips -g pixelHeight crop_exp.png)",
+      "Bash(cp home_full.png c2.png)",
+      "Bash(sips -c 900 1000 --cropOffset 1750 0 c2.png --out crop_stack.png)"
     ]
   }
 }

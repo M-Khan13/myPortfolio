@@ -1,4 +1,4 @@
-import { Pill, Section } from "@/components/frame";
+import { Section, TechPill } from "@/components/frame";
 import { Expandable } from "@/components/expandable";
 import { experience } from "@/content";
 
@@ -38,7 +38,7 @@ export function Experience() {
             <ul className="mt-5 flex flex-wrap gap-1.5">
               {role.tech.map((tech) => (
                 <li key={tech}>
-                  <Pill>{tech}</Pill>
+                  <TechPill label={tech} />
                 </li>
               ))}
             </ul>

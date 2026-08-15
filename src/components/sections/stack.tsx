@@ -1,3 +1,4 @@
+import { BrandMark, brandStyle } from "@/components/brand-mark";
 import { Section } from "@/components/frame";
 import { stack } from "@/content";
 import { brandIcon } from "@/lib/brand-icons";
@@ -52,21 +53,10 @@ function Tech({ label }: { label: string }) {
           // mixes it way back towards the foreground before it lands.
           brand && "lift-brand",
         )}
-        style={
-          brand
-            ? ({ "--brand": `#${brand.hex}` } as React.CSSProperties)
-            : undefined
-        }
+        style={brand ? brandStyle(brand) : undefined}
       >
         {brand ? (
-          <svg
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            aria-hidden="true"
-            className="size-4 shrink-0"
-          >
-            <path d={brand.path} />
-          </svg>
+          <BrandMark icon={brand} className="size-4" />
         ) : (
           <NeutralGlyph />
         )}

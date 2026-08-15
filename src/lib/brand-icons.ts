@@ -11,6 +11,7 @@
 
 import {
   siCelery,
+  siChartdotjs,
   siDjango,
   siDocker,
   siExpress,
@@ -22,6 +23,7 @@ import {
   siNextdotjs,
   siNginx,
   siNodedotjs,
+  siNpm,
   siOllama,
   siPostgresql,
   siPython,
@@ -29,6 +31,7 @@ import {
   siReact,
   siRedis,
   siShadcnui,
+  siSocketdotio,
   siTailwindcss,
   siTypescript,
   siVite,
@@ -54,6 +57,8 @@ const BRANDS: Record<string, BrandIcon> = {
   Celery: siCelery,
 
   MongoDB: siMongodb,
+  // Atlas is the hosted MongoDB, and wears the same mark.
+  "MongoDB Atlas": siMongodb,
   PostgreSQL: siPostgresql,
   Redis: siRedis,
 
@@ -65,6 +70,11 @@ const BRANDS: Record<string, BrandIcon> = {
   Git: siGit,
   Railway: siRailway,
   nginx: siNginx,
+
+  // Project and experience tags that don't appear in the stack list.
+  "Socket.IO": siSocketdotio,
+  "Chart.js": siChartdotjs,
+  npm: siNpm,
 };
 
 /** `undefined` for anything without a brand mark — render the neutral glyph. */

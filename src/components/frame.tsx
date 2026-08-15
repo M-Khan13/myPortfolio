@@ -1,7 +1,9 @@
 import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
+import { brandIcon } from "@/lib/brand-icons";
 import { isPlaceholder, placeholderLabel } from "@/content";
+import { BrandMark, brandStyle } from "@/components/brand-mark";
 import {
   ArrowUpRightIcon,
   entryIcons,
@@ -87,11 +89,33 @@ export function SectionLabel({
   );
 }
 
-/** Monospace tech tag. */
+/** Monospace tag. */
 export function Pill({ children }: { children: ReactNode }) {
   return (
     <span className="lift lift-box inline-block rounded border border-rule bg-surface px-2 py-1 font-mono text-[0.6875rem] text-muted-foreground">
       {children}
+    </span>
+  );
+}
+
+/**
+ * A tech tag carrying its brand mark. Labels with no mark in `simple-icons` —
+ * CLI, tree-sitter, DRF — render as a plain pill rather than taking a neutral
+ * glyph: these chips size to their content, so there is no column to keep
+ * aligned, and a row of meaningless squares would only add noise.
+ */
+export function TechPill({ label }: { label: string }) {
+  const brand = brandIcon(label);
+
+  if (!brand) return <Pill>{label}</Pill>;
+
+  return (
+    <span
+      className="lift lift-box lift-brand inline-flex items-center gap-1.5 rounded border border-rule bg-surface px-2 py-1 font-mono text-[0.6875rem] text-muted-foreground"
+      style={brandStyle(brand)}
+    >
+      <BrandMark icon={brand} className="size-3" />
+      {label}
     </span>
   );
 }

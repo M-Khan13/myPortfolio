@@ -6,10 +6,10 @@ import { CaseStudyBody, CaseStudyNav } from "@/components/case-study";
 import {
   Column,
   Divider,
-  Pill,
   ProjectLinks,
   Section,
   SectionLabel,
+  TechPill,
 } from "@/components/frame";
 import { Footer } from "@/components/sections/footer";
 import { Nav } from "@/components/sections/nav";
@@ -102,7 +102,7 @@ export default async function CaseStudyPage({
               <ul className="mt-6 flex flex-wrap gap-1.5">
                 {project.tech.map((tech) => (
                   <li key={tech}>
-                    <Pill>{tech}</Pill>
+                    <TechPill label={tech} />
                   </li>
                 ))}
               </ul>
