@@ -86,6 +86,66 @@ export function Pill({ children }: { children: ReactNode }) {
 }
 
 /**
+ * Outbound link chip — the bordered mono button used for a project's repo/live
+ * links, on both the homepage cards and the case-study pages.
+ */
+export function LinkChip({
+  href,
+  children,
+  className,
+}: {
+  href: string;
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer noopener"
+      className={cn(
+        "group inline-flex items-center gap-1.5 rounded border border-rule px-2.5 py-1.5 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:border-rule-strong hover:text-foreground",
+        className,
+      )}
+    >
+      {children}
+      <ArrowUpRightIcon className="size-3" />
+    </a>
+  );
+}
+
+/**
+ * A project's link row: filled hrefs become chips, unfilled `{{PLACEHOLDER}}`
+ * ones stay visible as labelled dashed chips rather than dead links.
+ */
+export function ProjectLinks({
+  links,
+  className,
+}: {
+  links: { label: string; href: string }[];
+  className?: string;
+}) {
+  if (links.length === 0) return null;
+
+  return (
+    <ul className={cn("flex flex-wrap items-center gap-3", className)}>
+      {links.map((link) =>
+        isPlaceholder(link.href) ? (
+          <li key={link.label} className="flex items-center gap-2">
+            <span className="label">{link.label}</span>
+            <PlaceholderChip value={link.href} />
+          </li>
+        ) : (
+          <li key={link.label}>
+            <LinkChip href={link.href}>{link.label}</LinkChip>
+          </li>
+        ),
+      )}
+    </ul>
+  );
+}
+
+/**
  * Icon badge that opens an Experience / Project / Education entry: the glyph in
  * a rounded square with a hairline border. Brightens with the row it belongs to
  * — see the `.lift` rules in globals.css.
