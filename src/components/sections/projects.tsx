@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { Pill, ProjectLinks, Section } from "@/components/frame";
 import { Expandable } from "@/components/expandable";
 import { projects } from "@/content";
@@ -45,6 +47,19 @@ export function Projects() {
             </ul>
 
             <ProjectLinks links={project.links} className="mt-5" />
+
+            {/* Only for projects with a write-up; the rest keep the card as
+                their whole story. The collapsed panel is inert, so this stays
+                out of the tab order until the entry is open. */}
+            {project.caseStudy ? (
+              <Link
+                href={`/projects/${project.slug}`}
+                className="mt-6 inline-flex items-center gap-2 border-b border-rule-strong pb-1 font-mono text-[0.6875rem] uppercase tracking-[0.14em] transition-colors hover:border-foreground"
+              >
+                Read case study
+                <span aria-hidden="true">→</span>
+              </Link>
+            ) : null}
           </Expandable>
         ))}
       </div>
