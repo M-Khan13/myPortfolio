@@ -12,7 +12,13 @@ import { cn } from "@/lib/utils";
  * order. Blocks whose content is missing drop out entirely, so a thinner case
  * study still reads as finished rather than broken.
  */
-export function CaseStudyBody({ study }: { study: CaseStudy }) {
+export function CaseStudyBody({
+  study,
+  title,
+}: {
+  study: CaseStudy;
+  title: string;
+}) {
   return (
     <>
       {study.cover ? (
@@ -20,7 +26,14 @@ export function CaseStudyBody({ study }: { study: CaseStudy }) {
           <Divider />
           {/* No eyebrow — the cover leads straight into the write-up. */}
           <Section>
-            <Frame className="aspect-[21/9]" src={study.cover} alt="" />
+            <Frame
+              // Letterboxed on a wide screen, squarer on a phone so the cover
+              // doesn't collapse to a sliver.
+              className="aspect-video sm:aspect-[21/9]"
+              src={study.cover}
+              alt={`${title} — cover`}
+              sizes="(min-width: 768px) 768px, 100vw"
+            />
           </Section>
         </>
       ) : null}
@@ -132,10 +145,12 @@ function Frame({
   src,
   alt,
   className,
+  sizes,
 }: {
   src: string;
   alt: string;
   className?: string;
+  sizes?: string;
 }) {
   return (
     <div
@@ -147,7 +162,7 @@ function Frame({
       {isPlaceholder(src) ? (
         <div role="presentation" className="hatch size-full" />
       ) : (
-        <Image src={src} alt={alt} fill className="object-cover" />
+        <Image src={src} alt={alt} fill sizes={sizes} className="object-cover" />
       )}
     </div>
   );
@@ -286,6 +301,7 @@ function Gallery({ shots }: { shots: { src: string; caption: string }[] }) {
               className="aspect-video"
               src={shot.src}
               alt={shot.caption}
+              sizes="(min-width: 640px) 384px, 100vw"
             />
             <figcaption className="label mt-2.5">{shot.caption}</figcaption>
           </figure>

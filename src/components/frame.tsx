@@ -67,12 +67,23 @@ export function Section({
   );
 }
 
-export function SectionLabel({ children }: { children: ReactNode }) {
+export function SectionLabel({
+  children,
+  /**
+   * Headings by default, since a section label names its section. An eyebrow
+   * that only decorates a heading — the "◆ CASE STUDY" above a case-study
+   * title — passes `p`, so it doesn't sit in the outline above the `h1`.
+   */
+  as: Tag = "h2",
+}: {
+  children: ReactNode;
+  as?: "h2" | "p";
+}) {
   return (
-    <h2 className="label mb-6 flex items-center gap-3">
+    <Tag className="label mb-6 flex items-center gap-3">
       <span className="size-1 shrink-0 rotate-45 bg-rule-strong" />
       {children}
-    </h2>
+    </Tag>
   );
 }
 

@@ -5,7 +5,9 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code} %{redirect_url}\\\\n\" http://localhost:4123/projects/sen)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:4123/)",
       "Bash(pkill -f \"next start -p 4123\")",
-      "Bash(git commit -q -m ' *)"
+      "Bash(git commit -q -m ' *)",
+      "Bash(curl -s http://localhost:4123/projects/cafe-ops)",
+      "Bash(python3 -c ' *)"
     ]
   }
 }
