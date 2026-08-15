@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
+import { CaseStudyBody } from "@/components/case-study";
 import {
   Column,
   Divider,
@@ -83,6 +84,8 @@ export default async function CaseStudyPage({
               </ul>
             </div>
           </Section>
+
+          <CaseStudyBody study={caseStudy} />
 
           <Divider />
           <Footer />

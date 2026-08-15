@@ -154,11 +154,32 @@ export function EntryBadge({ icon }: { icon: EntryIconId }) {
   const Icon = entryIcons[icon];
 
   return (
+    <Badge>
+      <Icon className="size-4" />
+    </Badge>
+  );
+}
+
+/**
+ * The badge shell itself — a rounded square with a hairline border. Holds an
+ * entry glyph on the homepage and a step number on the case-study pages.
+ */
+export function Badge({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
     <span
       aria-hidden="true"
-      className="lift lift-box grid size-8 shrink-0 place-items-center rounded-md border border-rule bg-surface text-muted-foreground"
+      className={cn(
+        "lift lift-box grid size-8 shrink-0 place-items-center rounded-md border border-rule bg-surface text-muted-foreground",
+        className,
+      )}
     >
-      <Icon className="size-4" />
+      {children}
     </span>
   );
 }
@@ -174,8 +195,23 @@ export function EntryBadge({ icon }: { icon: EntryIconId }) {
  */
 export function EntryRail({ icon }: { icon: EntryIconId }) {
   return (
-    <div className="flex flex-col items-center pt-4">
+    <BadgeRail className="pt-4">
       <EntryBadge icon={icon} />
+    </BadgeRail>
+  );
+}
+
+/** The badge-plus-connector rail itself, given any badge as its head. */
+export function BadgeRail({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={cn("flex flex-col items-center", className)}>
+      {children}
       <span
         role="presentation"
         className="mt-2 w-px flex-1 bg-linear-to-b from-rule-strong to-transparent"
