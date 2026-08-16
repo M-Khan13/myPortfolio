@@ -1,13 +1,19 @@
 "use client";
 
-import { useId, useState } from "react";
+import useWeb3Forms from "@web3forms/react";
+import { useId, useRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
 /**
- * Contact form, posted to `/api/contact`, which relays to Web3Forms with the
- * server-side access key. No page reload and no `mailto:` handoff — the result
- * lands inline under the button.
+ * Contact form, submitted straight to Web3Forms from the browser. No page
+ * reload and no `mailto:` handoff — the result lands inline under the button.
+ *
+ * The access key is `NEXT_PUBLIC_` on purpose: Web3Forms rejects server-side
+ * submissions unless you're on their Pro plan ("Use our API in client side"),
+ * so the key has to reach the browser. Their keys are designed for this — a key
+ * can only submit to the form it belongs to, and abuse is handled by the
+ * honeypot below plus the domain restrictions on the Web3Forms dashboard.
  */
 
 type Status =
@@ -25,51 +31,49 @@ const SENT = "Message sent — I'll get back to you.";
 const FAILED =
   "Something went wrong — email me directly at farzankhan1800@gmail.com.";
 
+const ACCESS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_KEY ?? "";
+
 export function ContactForm() {
   const id = useId();
+  // Reset needs the form after the submit resolves, by which point React has
+  // already cleared `currentTarget` on the original event.
+  const formRef = useRef<HTMLFormElement>(null);
   const [status, setStatus] = useState<Status>({ kind: "idle" });
+
   const sending = status.kind === "sending";
   const settled = status.kind === "sent" || status.kind === "error";
+
+  const { submit } = useWeb3Forms({
+    access_key: ACCESS_KEY,
+    settings: {
+      from_name: "Portfolio Contact",
+      subject: "New message from farzankhan.dev",
+    },
+    onSuccess: () => {
+      formRef.current?.reset();
+      setStatus({ kind: "sent", message: SENT });
+    },
+    onError: () => setStatus({ kind: "error", message: FAILED }),
+  });
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (sending) return;
 
-    const form = event.currentTarget;
-    const data = Object.fromEntries(new FormData(form));
+    const data = Object.fromEntries(new FormData(event.currentTarget));
     setStatus({ kind: "sending" });
 
     try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-      const result = (await response.json()) as {
-        ok: boolean;
-        message: string;
-      };
-
-      if (result.ok) {
-        form.reset();
-        setStatus({ kind: "sent", message: SENT });
-      } else {
-        // A 400 is something the visitor can fix themselves — a missing field
-        // or a malformed address — so the server's specific line is more use
-        // than the generic fallback. Anything else is our problem, and points
-        // them at email instead.
-        setStatus({
-          kind: "error",
-          message: response.status === 400 ? result.message : FAILED,
-        });
-      }
+      await submit(data);
     } catch {
+      // `submit` reports failures through onError; this only catches a throw
+      // (an offline fetch), which would otherwise strand the sending state.
       setStatus({ kind: "error", message: FAILED });
     }
   }
 
   return (
-    <form onSubmit={onSubmit} noValidate className="mt-10">
+    <form ref={formRef} onSubmit={onSubmit} className="mt-10">
       <p className="label mb-6">SEND_MESSAGE.SH</p>
 
       <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
@@ -96,13 +100,14 @@ export function ContactForm() {
 
       {/*
         Honeypot. Hidden from sight and from assistive tech, and excluded from
-        the tab order — only a bot filling every input will touch it.
+        the tab order — only a bot filling every input will touch it. Web3Forms
+        drops any submission where `botcheck` is set.
       */}
       <div aria-hidden="true" className="absolute left-[-9999px] opacity-0">
         <label htmlFor={`${id}-botcheck`}>Leave this field empty</label>
         <input
           id={`${id}-botcheck`}
-          type="text"
+          type="checkbox"
           name="botcheck"
           tabIndex={-1}
           autoComplete="off"
