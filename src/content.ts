@@ -380,6 +380,57 @@ export const projects: Project[] = [
     ],
     tech: ["Node.js", "Express", "MongoDB Atlas", "Ollama", "Gemini", "React"],
     links: [],
+    caseStudy: {
+      role: "Solo — backend / AI",
+      problem:
+        "You have documents — PDFs, notes — and you want to ask questions and get answers grounded in them, with citations, not a chatbot that invents things. I also wanted to build the retrieval loop by hand, no LangChain, so I actually understood every step instead of importing a black box.",
+      constraints: [
+        "No framework doing the thinking for me. I wrote the chunking, embedding, and cosine retrieval directly so every step is understood and debuggable.",
+        "Answers had to carry [n] citations back to source chunks, and the system had to refuse when the documents simply don't contain the answer — no confident hallucinations.",
+        '"Better" had to be provable. The eval harness was part of the build from the start, not bolted on after.',
+      ],
+      build: {
+        intro:
+          "A hand-rolled RAG loop, no LangChain: chunk documents, embed with nomic-embed via Ollama, store in MongoDB Atlas, retrieve top-k by cosine similarity, then answer with Gemini — grounded, cited as [n], and refusing when the context doesn't support an answer.",
+        architecture: {
+          rows: [
+            [{ label: "INGEST", sub: "PDF · chunk" }],
+            [{ label: "EMBED", sub: "nomic-embed · Ollama" }],
+            [{ label: "STORE", sub: "MongoDB Atlas" }],
+            [{ label: "RETRIEVE", sub: "cosine top-k" }],
+            [{ label: "GENERATE", sub: "Gemini · [n] citations · refusal" }],
+          ],
+          deploy: "Node + Express · React client",
+        },
+        decisions: [
+          {
+            title: "Hand-rolled, no LangChain",
+            body: "Wrote chunking, the embedding calls, and cosine retrieval myself to understand the full pipeline end to end rather than trusting a framework's defaults.",
+          },
+          {
+            title: "Grounded answers + refusal",
+            body: "Responses cite their source chunks as [n], and the prompt enforces a simple rule: if the retrieved context doesn't answer it, say so.",
+          },
+          {
+            title: "Eval-first",
+            body: 'An 8-question eval harness scored retrieval and answer quality. The finding: baseline chunking beat both of my "improvement" attempts, so I kept the baseline.',
+          },
+        ],
+      },
+      outcome: [
+        { value: "8", label: "question eval harness" },
+        { value: "baseline", label: "beat both tuning attempts" },
+        { value: "0", label: "LangChain dependencies" },
+      ],
+      gallery: [
+        { src: "{{RAG_DOC_QA_SHOT_CITATIONS}}", caption: "Q&A with citations" },
+        { src: "{{RAG_DOC_QA_SHOT_EVAL}}", caption: "Eval harness table" },
+        { src: "{{RAG_DOC_QA_SHOT_ARCHITECTURE}}", caption: "Architecture" },
+        { src: "{{RAG_DOC_QA_SHOT_REFUSAL}}", caption: "Refusal example" },
+      ],
+      reflection:
+        'This is where the discipline that runs through everything since started: build the eval first, then let the numbers tell you what actually works. The "improvements" that lost turned out to be the most useful result.',
+    },
   },
   {
     slug: "sen",
