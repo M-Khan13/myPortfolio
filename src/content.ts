@@ -290,7 +290,7 @@ export const projects: Project[] = [
     },
   },
   {
-    slug: "ai-github-repo-explainer",
+    slug: "repo-explainer",
     title: "AI GitHub Repo Explainer",
     year: "2026",
     description: "Ask a codebase how it works.",
@@ -303,6 +303,69 @@ export const projects: Project[] = [
     ],
     tech: ["Node.js", "Express", "MongoDB", "Ollama", "tree-sitter", "Gemini"],
     links: [],
+    caseStudy: {
+      role: "Solo — backend / AI",
+      problem:
+        'Dropping into an unfamiliar codebase is slow. You want to ask "how does auth work here?" and get an answer grounded in the actual code — with file and line citations — not a confident guess from a model that has never seen the repo. I wanted a tool that reads a repository and answers questions about it, honestly.',
+      constraints: [
+        "A whole repo doesn't fit in a context window, so source had to be chunked intelligently. Splitting by arbitrary line counts returns half-functions that mean nothing — the chunking had to respect code structure.",
+        'Answers had to be grounded in real code with file:line citations. A plausible-sounding hallucination about someone\'s own codebase is worse than "I don\'t know."',
+        "The whole pipeline runs on local embeddings via Ollama — no paid embedding API. So retrieval quality had to come from design, not from throwing a bigger model at it.",
+      ],
+      build: {
+        intro:
+          "Clone a repo, chunk its source with syntax-aware tree-sitter parsing, embed each chunk with nomic-embed via Ollama, store and retrieve by hand-rolled cosine similarity, then answer with Gemini grounded generation that cites file:line. An eval harness scores retrieval so every change is measured, not assumed.",
+        architecture: {
+          // A straight pipeline — every stage feeds exactly one successor, so
+          // each gets a row of its own.
+          rows: [
+            [{ label: "INGEST", sub: "clone · tree-sitter chunk" }],
+            [{ label: "EMBED", sub: "nomic-embed · Ollama" }],
+            [{ label: "STORE", sub: "MongoDB vectors" }],
+            [{ label: "RETRIEVE", sub: "cosine top-k" }],
+            [{ label: "GENERATE", sub: "Gemini · file:line citations" }],
+          ],
+          deploy: "Local Ollama · Node + Express",
+        },
+        decisions: [
+          {
+            title: "Syntax-aware chunking",
+            body: "tree-sitter parses functions and classes as whole units instead of cutting mid-body, so every retrieved chunk is a complete, meaningful piece of code.",
+          },
+          {
+            title: "Grounded, with citations",
+            body: "Every answer cites the file and line it came from, and the model is instructed to refuse when the retrieved context doesn't actually support an answer.",
+          },
+          {
+            title: "Measured retrieval",
+            body: 'Built a 10-question retrieval eval; baseline hit@6 = 90%. When I "improved" it by dropping short chunks, the score dropped — so I kept the baseline. Measured, not assumed.',
+          },
+          {
+            title: "Honest about gaps",
+            body: "Express route handlers written as call expressions aren't extracted yet. It's documented as a known limitation rather than hidden.",
+          },
+        ],
+      },
+      outcome: [
+        { value: "90%", label: "hit@6 on retrieval eval" },
+        { value: "107", label: "chunks indexed from a real repo" },
+        { value: "0", label: "paid embedding calls — fully local" },
+      ],
+      gallery: [
+        { src: "{{REPO_EXPLAINER_SHOT_EVAL}}", caption: "Eval harness output" },
+        {
+          src: "{{REPO_EXPLAINER_SHOT_CITATIONS}}",
+          caption: "Grounded answer with citations",
+        },
+        { src: "{{REPO_EXPLAINER_SHOT_ARCHITECTURE}}", caption: "Architecture" },
+        {
+          src: "{{REPO_EXPLAINER_SHOT_CHUNKING}}",
+          caption: "Chunking breakdown",
+        },
+      ],
+      reflection:
+        'The finding that "improving" the chunking made retrieval worse was the whole point. Without the eval harness I\'d have shipped a worse system, convinced it was better.',
+    },
   },
   {
     slug: "rag-doc-qa",
