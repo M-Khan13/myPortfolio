@@ -294,7 +294,9 @@ function Outcome({ stats }: { stats: { value: string; label: string }[] }) {
         <div
           key={stat.label}
           className={cn(
-            "flex flex-col-reverse py-6",
+            // `justify-end` packs to the *top* in a reversed column, so the
+            // values share a baseline even when one label wraps to fewer lines.
+            "flex flex-col-reverse justify-end py-6",
             i > 0 && "border-t border-rule sm:border-l sm:border-t-0 sm:pl-6",
             i > 0 || "sm:pr-6",
           )}
