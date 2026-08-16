@@ -23,7 +23,11 @@
       "Bash(sips -c 1500 1000 --cropOffset 2500 0 c1.png --out crop_exp.png)",
       "Bash(sips -g pixelHeight crop_exp.png)",
       "Bash(cp home_full.png c2.png)",
-      "Bash(sips -c 900 1000 --cropOffset 1750 0 c2.png --out crop_stack.png)"
+      "Bash(sips -c 900 1000 --cropOffset 1750 0 c2.png --out crop_stack.png)",
+      "Bash(\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --headless=new --disable-gpu --hide-scrollbars --window-size=1000,4400 --screenshot=rag.png --virtual-time-budget=4000 http://localhost:4123/projects/rag-doc-qa)",
+      "Bash(sips -c 500 1000 --cropOffset 2050 0 rag.png --out rag_stats.png)",
+      "Bash(\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --headless=new --disable-gpu --hide-scrollbars --force-prefers-color-scheme=light --window-size=900,400 --screenshot=av_light.png --virtual-time-budget=4000 http://localhost:4123/)",
+      "Bash(awk '{print $5, $9}')"
     ]
   }
 }
