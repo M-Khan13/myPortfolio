@@ -11,6 +11,9 @@ const WEB3FORMS_ENDPOINT = "https://api.web3forms.com/submit";
 /** Where Web3Forms delivers, configured on the access key itself. */
 const SUBJECT = "New message from farzankhan.dev";
 
+/** Sender label on the notification email. */
+const FROM_NAME = "Portfolio Contact";
+
 type Result = { ok: boolean; message: string };
 
 function json(body: Result, status: number) {
@@ -68,7 +71,10 @@ export async function POST(request: Request) {
       body: JSON.stringify({
         access_key: key,
         subject: SUBJECT,
-        from_name: name,
+        // Fixed sender label so every notification threads the same way; the
+        // visitor's own name and address travel in the body and in `replyto`,
+        // so hitting reply still answers them directly.
+        from_name: FROM_NAME,
         name,
         email,
         message,

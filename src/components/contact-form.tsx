@@ -21,10 +21,15 @@ const FIELDS = [
   { name: "email", label: "EMAIL", type: "email", autoComplete: "email" },
 ] as const;
 
+const SENT = "Message sent — I'll get back to you.";
+const FAILED =
+  "Something went wrong — email me directly at farzankhan1800@gmail.com.";
+
 export function ContactForm() {
   const id = useId();
   const [status, setStatus] = useState<Status>({ kind: "idle" });
   const sending = status.kind === "sending";
+  const settled = status.kind === "sent" || status.kind === "error";
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -47,15 +52,19 @@ export function ContactForm() {
 
       if (result.ok) {
         form.reset();
-        setStatus({ kind: "sent", message: result.message });
+        setStatus({ kind: "sent", message: SENT });
       } else {
-        setStatus({ kind: "error", message: result.message });
+        // A 400 is something the visitor can fix themselves — a missing field
+        // or a malformed address — so the server's specific line is more use
+        // than the generic fallback. Anything else is our problem, and points
+        // them at email instead.
+        setStatus({
+          kind: "error",
+          message: response.status === 400 ? result.message : FAILED,
+        });
       }
     } catch {
-      setStatus({
-        kind: "error",
-        message: "Network error — check your connection and try again.",
-      });
+      setStatus({ kind: "error", message: FAILED });
     }
   }
 
@@ -100,7 +109,7 @@ export function ContactForm() {
         />
       </div>
 
-      <div className="mt-8 flex flex-wrap items-center gap-4">
+      <div className="mt-8">
         <button
           type="submit"
           disabled={sending}
@@ -110,20 +119,23 @@ export function ContactForm() {
         </button>
 
         {/*
-          One live region for both outcomes, so a screen reader announces the
-          result without the form stealing focus.
+          One live region for both outcomes, mounted at all times so a screen
+          reader announces the result without the form stealing focus.
+
+          Monochrome, like the rest of the site: a failure needs attention so it
+          takes the off-white foreground, while a success is a quiet
+          confirmation in muted grey. Neither uses colour.
         */}
         <p
           role="status"
           aria-live="polite"
           className={cn(
             "font-mono text-[0.75rem]",
-            status.kind === "error" ? "text-destructive" : "text-muted-foreground",
+            settled && "mt-4",
+            status.kind === "error" ? "text-foreground" : "text-muted-foreground",
           )}
         >
-          {status.kind === "sent" || status.kind === "error"
-            ? status.message
-            : ""}
+          {settled ? status.message : ""}
         </p>
       </div>
     </form>
