@@ -18,6 +18,7 @@
   --color-rule-strong: var(--rule-strong);
   --color-hatch: var(--hatch);
   --color-surface: var(--surface);
+  --color-plate: var(--plate);
   --color-level-0: var(--level-0);
   --color-level-1: var(--level-1);
   --color-level-2: var(--level-2);
@@ -79,6 +80,14 @@
   --rule: oklch(0.865 0.005 95);
   --rule-strong: oklch(0.785 0.006 95);
   --hatch: oklch(0.84 0.006 95);
+
+  /*
+   * Paper plate behind transparent artwork — the avatar is black line work on
+   * a transparent ground, which would disappear into the dark theme. This is
+   * the one surface that stays light in both themes, so it is deliberately
+   * *not* redefined under `.dark` below. Same warm paper as the light page.
+   */
+  --plate: oklch(0.947 0.004 95);
 
   /*
    * Contribution graph ramp. Each theme ramps towards its own opposite: on

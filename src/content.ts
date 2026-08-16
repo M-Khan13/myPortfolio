@@ -32,7 +32,7 @@ export const profile = {
   tagline: "Building AI-native products — measured, not assumed.",
   email: "farzankhan1800@gmail.com",
   /** Drop a file in /public and point at it, e.g. "/avatar.jpg". */
-  avatar: "{{AVATAR_IMAGE}}",
+  avatar: "/avatar.png",
   /** Optional. Set to null to hide the résumé link entirely. */
   resume: "https://bit.ly/4gOaCQL" as string | null,
   /** IANA zone driving the live clock in the profile card. */

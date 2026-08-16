@@ -122,13 +122,16 @@ function Avatar() {
   }
 
   return (
+    // `object-contain` on a paper plate, not `object-cover`: the artwork is
+    // line work on a transparent ground, so it must not be cropped and needs a
+    // light backing to stay legible in the dark theme.
     <Image
       src={profile.avatar}
       alt={profile.name}
       width={80}
       height={80}
       priority
-      className="size-16 shrink-0 rounded-lg border border-rule object-cover sm:size-20"
+      className="size-16 shrink-0 rounded-lg border border-rule bg-plate object-contain sm:size-20"
     />
   );
 }
