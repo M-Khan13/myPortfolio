@@ -223,12 +223,12 @@ export const projects: Project[] = [
     tech: ["React", "Node.js", "Express", "MongoDB", "Gemini", "Socket.IO", "Docker"],
     links: [
       { label: "Repository", href: "https://github.com/M-Khan13/Cafe-opps" },
-      { label: "Live site", href: "{{CAFE_OPS_LIVE_URL}}" },
+      // { label: "Live site", href: "{{CAFE_OPS_LIVE_URL}}" },
     ],
     caseStudy: {
       role: "Solo — full-stack",
       cover: {
-        src: "{{CAFE_OPS_COVER}}",
+        src: "/images/Admin_dashboard.png",
         caption: "Cover — admin order kanban",
       },
       problem:
@@ -280,10 +280,10 @@ export const projects: Project[] = [
         { value: "<100ms", label: "real-time order feed latency" },
       ],
       gallery: [
-        { src: "{{CAFE_OPS_SHOT_KANBAN}}", caption: "Order kanban" },
-        { src: "{{CAFE_OPS_SHOT_TASKS}}", caption: "Staff task screen" },
-        { src: "{{CAFE_OPS_SHOT_AI_REVIEW}}", caption: "AI task review" },
-        { src: "{{CAFE_OPS_SHOT_FEED}}", caption: "Live order feed" },
+        { src: "/images/Staff_dashboard.png", caption: "Staff task screen",  },
+        { src: "/images/Live_order.png", caption: "Live order feed" },
+        { src: "/images/Login_screen.png", caption: "Login Screen" },
+        { src: "/images/Ai_task.png", caption: "AI Task" },
       ],
       reflection:
         'The guard was the hard part, not the model. Most of the work was deciding what "good enough to show a human" actually meant — and being willing to throw away tasks that weren\'t.',
@@ -351,18 +351,18 @@ export const projects: Project[] = [
         { value: "107", label: "chunks indexed from a real repo" },
         { value: "0", label: "paid embedding calls — fully local" },
       ],
-      gallery: [
-        { src: "{{REPO_EXPLAINER_SHOT_EVAL}}", caption: "Eval harness output" },
-        {
-          src: "{{REPO_EXPLAINER_SHOT_CITATIONS}}",
-          caption: "Grounded answer with citations",
-        },
-        { src: "{{REPO_EXPLAINER_SHOT_ARCHITECTURE}}", caption: "Architecture" },
-        {
-          src: "{{REPO_EXPLAINER_SHOT_CHUNKING}}",
-          caption: "Chunking breakdown",
-        },
-      ],
+      // gallery: [
+      //   { src: "{{REPO_EXPLAINER_SHOT_EVAL}}", caption: "Eval harness output" },
+      //   {
+      //     src: "{{REPO_EXPLAINER_SHOT_CITATIONS}}",
+      //     caption: "Grounded answer with citations",
+      //   },
+      //   { src: "{{REPO_EXPLAINER_SHOT_ARCHITECTURE}}", caption: "Architecture" },
+      //   {
+      //     src: "{{REPO_EXPLAINER_SHOT_CHUNKING}}",
+      //     caption: "Chunking breakdown",
+      //   },
+      // ],
       reflection:
         'The finding that "improving" the chunking made retrieval worse was the whole point. Without the eval harness I\'d have shipped a worse system, convinced it was better.',
     },
@@ -422,12 +422,12 @@ export const projects: Project[] = [
         { value: "baseline", label: "beat both tuning attempts" },
         { value: "0", label: "LangChain dependencies" },
       ],
-      gallery: [
-        { src: "{{RAG_DOC_QA_SHOT_CITATIONS}}", caption: "Q&A with citations" },
-        { src: "{{RAG_DOC_QA_SHOT_EVAL}}", caption: "Eval harness table" },
-        { src: "{{RAG_DOC_QA_SHOT_ARCHITECTURE}}", caption: "Architecture" },
-        { src: "{{RAG_DOC_QA_SHOT_REFUSAL}}", caption: "Refusal example" },
-      ],
+      // gallery: [
+      //   { src: "{{RAG_DOC_QA_SHOT_CITATIONS}}", caption: "Q&A with citations" },
+      //   { src: "{{RAG_DOC_QA_SHOT_EVAL}}", caption: "Eval harness table" },
+      //   { src: "{{RAG_DOC_QA_SHOT_ARCHITECTURE}}", caption: "Architecture" },
+      //   { src: "{{RAG_DOC_QA_SHOT_REFUSAL}}", caption: "Refusal example" },
+      // ],
       reflection:
         'This is where the discipline that runs through everything since started: build the eval first, then let the numbers tell you what actually works. The "improvements" that lost turned out to be the most useful result.',
     },

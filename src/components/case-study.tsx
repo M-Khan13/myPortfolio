@@ -169,7 +169,7 @@ function Frame({
           className,
         )}
       >
-        <Image src={src} alt={alt} fill sizes={sizes} className="object-cover" />
+        <Image src={src} alt={alt} fill sizes={sizes} className="object-contain" />
       </div>
     );
   }
@@ -319,7 +319,7 @@ function Gallery({ shots }: { shots: { src: string; caption: string }[] }) {
       {shots.map((shot) => (
         <li key={shot.caption}>
           <Frame
-            className="aspect-[4/3]"
+            className="aspect-video"
             src={shot.src}
             alt={shot.caption}
             caption={shot.caption}

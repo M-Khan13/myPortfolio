@@ -27,7 +27,18 @@
       "Bash(\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --headless=new --disable-gpu --hide-scrollbars --window-size=1000,4400 --screenshot=rag.png --virtual-time-budget=4000 http://localhost:4123/projects/rag-doc-qa)",
       "Bash(sips -c 500 1000 --cropOffset 2050 0 rag.png --out rag_stats.png)",
       "Bash(\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --headless=new --disable-gpu --hide-scrollbars --force-prefers-color-scheme=light --window-size=900,400 --screenshot=av_light.png --virtual-time-budget=4000 http://localhost:4123/)",
-      "Bash(awk '{print $5, $9}')"
+      "Bash(awk '{print $5, $9}')",
+      "Bash(git fetch *)",
+      "Bash(git rev-list *)",
+      "Bash(git ls-remote *)",
+      "Bash(grep -iE '\\\\.env|secret|credential|\\\\.pem$|\\\\.key$|id_rsa|token')",
+      "Bash(\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --headless=new --disable-gpu --hide-scrollbars --window-size=1000,5300 --screenshot=contact.png --virtual-time-budget=5000 http://localhost:4123/)",
+      "Bash(sips -c 800 1000 --cropOffset 4300 0 contact.png --out contact_crop.png)",
+      "Bash(cp contact.png cc.png)",
+      "Bash(sips -c 900 1000 --cropOffset 3550 0 cc.png --out contact_crop2.png)",
+      "Bash(npm i *)",
+      "Bash(xargs cat)",
+      "Bash(git rm *)"
     ]
   }
 }
