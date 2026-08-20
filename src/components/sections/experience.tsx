@@ -1,4 +1,4 @@
-import { Section, TechPill } from "@/components/frame";
+import { ProjectLinks, Section, TechPill } from "@/components/frame";
 import { Expandable } from "@/components/expandable";
 import { experience } from "@/content";
 
@@ -42,6 +42,8 @@ export function Experience() {
                 </li>
               ))}
             </ul>
+
+            <ProjectLinks links={role.links ?? []} className="mt-5" />
           </Expandable>
         ))}
       </div>

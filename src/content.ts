@@ -122,6 +122,8 @@ export const stack: { no: string; label: string; items: string[] }[] = [
   },
 ];
 
+export type ProjectLink = { label: string; href: string };
+
 export type Experience = {
   company: string;
   role: string;
@@ -131,6 +133,8 @@ export type Experience = {
   icon: EntryIconId;
   bullets: string[];
   tech: string[];
+  /** Certificate, letter, merged PR — same chip row the projects use. */
+  links?: ProjectLink[];
   /** Open on first paint. */
   defaultOpen?: boolean;
 };
@@ -149,10 +153,9 @@ export const experience: Experience[] = [
       "Added circuit export: SPICE .cir download, PDF, and LTspice .asc via a custom symbol-mapping generator.",
     ],
     tech: ["React", "Django", "DRF", "Celery", "Redis", "PostgreSQL", "Chart.js"],
+    links: [{ label: "Certificate", href: "{{FOSSEE_CERTIFICATE_URL}}" }],
   },
 ];
-
-export type ProjectLink = { label: string; href: string };
 
 /**
  * The long-form write-up behind a project, rendered at `/projects/[slug]`.
@@ -210,7 +213,7 @@ export const projects: Project[] = [
   {
     slug: "cafe-ops",
     title: "Café Ops",
-    year: "2025",
+    year: "2026",
     description: "Full-stack café operations platform.",
     icon: "cup",
     defaultOpen: true,
