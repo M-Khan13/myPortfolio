@@ -153,7 +153,7 @@ export const experience: Experience[] = [
       "Added circuit export: SPICE .cir download, PDF, and LTspice .asc via a custom symbol-mapping generator.",
     ],
     tech: ["React", "Django", "DRF", "Celery", "Redis", "PostgreSQL", "Chart.js"],
-    links: [{ label: "Certificate", href: "{{FOSSEE_CERTIFICATE_URL}}" }],
+    links: [{ label: "Certificate", href: "/fossee-certificate.pdf" }],
   },
 ];
 
