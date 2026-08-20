@@ -143,7 +143,7 @@ export const experience: Experience[] = [
   {
     company: "IIT Bombay",
     role: "FOSSEE Summer Fellow",
-    dates: "2026 — Present",
+    dates: "May 2026 — July 2026",
     location: "Remote",
     icon: "flask",
     defaultOpen: true,
