@@ -28,9 +28,9 @@ export async function Contributions() {
         <div dir="ltr" className="min-w-max">
           {/* Month labels, positioned over the week each month starts in. */}
           <div
-            className="mb-1 grid gap-[3px] pl-8"
+            className="mb-1 grid gap-[2px] pl-8"
             style={{
-              gridTemplateColumns: `repeat(${calendar.weeks.length}, 11px)`,
+              gridTemplateColumns: `repeat(${calendar.weeks.length}, 10px)`,
             }}
           >
             {calendar.weeks.map((_, index) => (
@@ -46,11 +46,11 @@ export async function Contributions() {
 
           <div className="flex gap-1">
             {/* Weekday gutter. */}
-            <div className="grid grid-rows-7 gap-[3px] pr-1">
+            <div className="grid grid-rows-7 gap-[2px] pr-1">
               {Array.from({ length: 7 }, (_, row) => (
                 <span
                   key={row}
-                  className="label h-[11px] text-[0.625rem] leading-[11px] tracking-normal"
+                  className="label h-[10px] text-[0.625rem] leading-[10px] tracking-normal"
                 >
                   {WEEKDAY_ROWS.includes(row)
                     ? WEEKDAYS[WEEKDAY_ROWS.indexOf(row)]
@@ -59,14 +59,14 @@ export async function Contributions() {
               ))}
             </div>
 
-            <div className="grid grid-flow-col grid-rows-7 gap-[3px]">
+            <div className="grid grid-flow-col grid-rows-7 gap-[2px]">
               {calendar.weeks.map((week) =>
                 week.days.map((day) => (
                   <span
                     key={day.date}
                     title={`${day.count} contribution${day.count === 1 ? "" : "s"} on ${day.date}`}
                     style={{ gridRow: day.weekday + 1 }}
-                    className={`size-[11px] rounded-[2px] ${LEVEL_CLASS[day.level]}`}
+                    className={`size-[10px] rounded-[2px] ${LEVEL_CLASS[day.level]}`}
                   />
                 )),
               )}
@@ -100,7 +100,7 @@ export async function Contributions() {
           {([0, 1, 2, 3, 4] as Level[]).map((level) => (
             <span
               key={level}
-              className={`size-[11px] rounded-[2px] ${LEVEL_CLASS[level]}`}
+              className={`size-[10px] rounded-[2px] ${LEVEL_CLASS[level]}`}
             />
           ))}
           <span className="label text-[0.625rem]">More</span>
