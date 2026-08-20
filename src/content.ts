@@ -34,7 +34,7 @@ export const profile = {
   /** Drop a file in /public and point at it, e.g. "/avatar.jpg". */
   avatar: "/avatar.png",
   /** Optional. Set to null to hide the résumé link entirely. */
-  resume: "https://bit.ly/4gOaCQL" as string | null,
+  resume: "https://drive.google.com/file/d/1kWlSIELxCB5NR_DqkqgfKAHlVjjMqXoU/view?usp=sharing" as string | null,
   /** IANA zone driving the live clock in the profile card. */
   timeZone: "Asia/Kolkata",
   timeZoneLabel: "IST",
@@ -82,18 +82,18 @@ export const socials: {
  * the cutoffs live in `src/lib/time.ts`.
  */
 export const greetings = {
-  night: "Still up?", // 00:00 – 05:29
-  morning: "Good morning", // 05:30 – 11:59
-  afternoon: "Good afternoon", // 12:00 – 16:59
-  evening: "Good evening", // 17:00 – 23:59
+  night: "Still up? Respect", // 00:00 – 05:29
+  morning: "Morning!! Coffee ready?", // 05:30 – 11:59
+  afternoon: "Hey! Hope the day is going well!", // 12:00 – 16:59
+  evening: "Evening!!", // 17:00 – 23:59
 };
 
 export const intro = {
   bullets: [
     "Final-year B.Tech Computer Science student at VIT Bhopal (CGPA 8.5), building full-stack and AI products.",
     "FOSSEE Summer Fellow at IIT Bombay, contributing to eSim-Cloud — an open-source, browser-based circuit simulator.",
-    "MERN + AI integration is home turf: hand-rolled RAG pipelines, LLM eval guards, Gemini API.",
-    "I ship with eval harnesses — measured, not assumed.",
+    "MERN + AI integration is home turf: hand-rolled RAG pipelines, LLM eval guards, Gemini API, ship with eval harnesses — measured, not assumed.",
+    "Open to work & collaboration",
   ],
 };
 
